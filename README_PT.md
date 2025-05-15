@@ -20,9 +20,7 @@ Este projeto foca-se na aplicação prática de ADTs, modularidade de código e 
 
 
 ## 👥 Autores
-- Rui Manuel Do Carmo Lagarto - 2024114784
-- Donizete Francisco Có - 200221162
-- Inês Colaço Palet - 201701984
+- Rui Manuel Do Carmo Lagarto
 
 ## ⚙️ Requesitos
 - Compilador `gcc`
