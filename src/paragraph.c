@@ -16,57 +16,6 @@ static int *getWhiteSpacePositions(char text[], int numWhitespaces);
 static char **sliceParagraph(char text[], int *numTokens);
 
 
-static int countWhiteSpace(char text[]) {
-    int numWhitespaces = 0;
-
-    int totalChars = strlen(text);
-    
-    for (int i = 0; i < totalChars; i++) {
-        if (isspace(text[i])) numWhitespaces++;
-    }
-    return numWhitespaces;
-}
-
-static void printParagraphAlignedLeft(Paragraph p){
-    for(int i=0;i < p.numberTokens; i++){
-        printf("%s",p.tokens[i].content);
-    }
-}
-
-void printParagraphToBuffer(Paragraph p, char* buffer, int bufferSize) {
-    if (buffer == NULL || bufferSize <= 0) return;
-    
-    int pos = 0;
-    for (int i = 0; i < p.numberTokens && pos < bufferSize - 1; i++) {
-        int len = snprintf(buffer + pos, bufferSize - pos, "%s", p.tokens[i].content);
-        if (len > 0) {
-            pos += len;
-        }
-    }
-}
-
-
-static int *getWhiteSpacePositions(char text[], int numWhitespaces) {
-    if(numWhitespaces == 0) return NULL;
-
-    int *spacePos = (int *)malloc(numWhitespaces * sizeof(int));
-    if(!spacePos){
-        alertWarning("Memory allocation failed for whitespace positions.\n", "red");
-        return NULL;
-    }
-    if(!spacePos) return NULL;
-
-    int pos = 0;
-
-    for (int i = 0; text[i]; i++) {
-        if (isspace(text[i])) {
-            spacePos[pos++] = i;
-        }
-    }
-    return spacePos;
-}
-
-
 Paragraph createParagraph(char text[]){
     Paragraph p = {0, NULL};
 
@@ -104,7 +53,81 @@ Paragraph createParagraph(char text[]){
     return p;
 }
 
+void freeParagraph(Paragraph *p) {
+    if(p == NULL || p->tokens == NULL){
+        return;
+    } 
 
+    free(p->tokens);
+    p->tokens = NULL;
+    p->numberTokens = 0;   
+}
+
+int replaceWord(Paragraph p, char target[], char replacement[]){
+    int occurrences = 0;
+    for(int i = 0; i < p.numberTokens; i++){
+        if(strcmp(p.tokens[i].content, target) == 0){
+            strcpy(p.tokens[i].content, replacement); 
+            occurrences++;
+        }
+    }
+    return occurrences;
+}
+
+void printParagraph(Paragraph p){
+    printParagraphAlignedLeft(p); 
+}
+
+void printParagraphToBuffer(Paragraph p, char* buffer, int bufferSize) {
+    if (buffer == NULL || bufferSize <= 0) return;
+    
+    int pos = 0;
+    for (int i = 0; i < p.numberTokens && pos < bufferSize - 1; i++) {
+        int len = snprintf(buffer + pos, bufferSize - pos, "%s", p.tokens[i].content);
+        if (len > 0) {
+            pos += len;
+        }
+    }
+}
+
+
+
+static int countWhiteSpace(char text[]) {
+    int numWhitespaces = 0;
+
+    int totalChars = strlen(text);
+    
+    for (int i = 0; i < totalChars; i++) {
+        if (isspace(text[i])) numWhitespaces++;
+    }
+    return numWhitespaces;
+}
+
+static void printParagraphAlignedLeft(Paragraph p){
+    for(int i=0;i < p.numberTokens; i++){
+        printf("%s",p.tokens[i].content);
+    }
+}
+
+static int *getWhiteSpacePositions(char text[], int numWhitespaces) {
+    if(numWhitespaces == 0) return NULL;
+
+    int *spacePos = (int *)malloc(numWhitespaces * sizeof(int));
+    if(!spacePos){
+        alertWarning("Memory allocation failed for whitespace positions.\n", "red");
+        return NULL;
+    }
+    if(!spacePos) return NULL;
+
+    int pos = 0;
+
+    for (int i = 0; text[i]; i++) {
+        if (isspace(text[i])) {
+            spacePos[pos++] = i;
+        }
+    }
+    return spacePos;
+}
 
 static char **sliceParagraph(char text[], int *numTokens) {
     int numSpaces = countWhiteSpace(text);
@@ -160,29 +183,4 @@ static char **sliceParagraph(char text[], int *numTokens) {
     *numTokens = tokenIndex;
     free(spacePositions);
     return finalTokens;
-}
-
-int replaceWord(Paragraph p, char target[], char replacement[]){
-    int occurrences = 0;
-    for(int i = 0; i < p.numberTokens; i++){
-        if(strcmp(p.tokens[i].content, target) == 0){
-            strcpy(p.tokens[i].content, replacement); 
-            occurrences++;
-        }
-    }
-    return occurrences;
-}
-
-void printParagraph(Paragraph p){
-    printParagraphAlignedLeft(p); 
-}
-
-void freeParagraph(Paragraph *p) {
-    if(p == NULL || p->tokens == NULL){
-        return;
-    } 
-
-    free(p->tokens);
-    p->tokens = NULL;
-    p->numberTokens = 0;   
 }
