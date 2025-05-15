@@ -11,6 +11,7 @@
 
 #include "stringWrap.h"
 #include <string.h>
+#include <ctype.h>
 
 /**
  * @brief 
@@ -31,4 +32,23 @@ StringWrap stringWrapCreate(char *str){
     StringWrap strW;
     strcpy(strW.text, str);
     return strW;
+}
+
+
+
+void sw_toUpper(StringWrap *sw){
+    if(!sw) return;
+
+    for(int i = 0; i < sw->text[i]; i++){
+        sw->text[i] = toupper((unsigned char) sw->text[i]);
+    }
+}
+
+
+void sw_toLower(StringWrap *sw){
+    if(!sw) return;
+
+    for(int i = 0; i < sw->text[i]; i++){
+        sw->text[i] = tolower((unsigned char) sw->text[i]);
+    }
 }

@@ -10,6 +10,12 @@
 
 #define MAX_LINE 1000
 
+static int countWhiteSpace(char text[]);
+static void printParagraphAlignedLeft(Paragraph p);
+static int *getWhiteSpacePositions(char text[], int numWhitespaces);
+static char **sliceParagraph(char text[], int *numTokens);
+
+
 static int countWhiteSpace(char text[]) {
     int numWhitespaces = 0;
 
@@ -100,20 +106,7 @@ Paragraph createParagraph(char text[]){
 
 
 
-int countWithoutSpecialChar(char text[]){
-    if(text == NULL) return 0;
-
-    int size = strlen(text);
-    int count = 0;
-
-    for(int i = 0; i < size; i++){
-        if(isalnum((unsigned char)text[i])) count++;
-    }
-    return count;
-}
-
-
-char **sliceParagraph(char text[], int *numTokens) {
+static char **sliceParagraph(char text[], int *numTokens) {
     int numSpaces = countWhiteSpace(text);
     int *spacePositions = getWhiteSpacePositions(text, numSpaces);
     
